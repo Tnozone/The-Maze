@@ -10,12 +10,12 @@ CApp::CApp()
 
 bool CApp::OnInit()
 {
-  if (SDL_init(SDL_INIT_EVERYTHING) < 0)
+  if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
   {
     return false;
   }
   
-  pWindow = SLD_CreateWindow("qbRaytracer - The Maze", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_SHOWN);
+  pWindow = SDL_CreateWindow("qbRaytracer - The Maze", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_SHOWN);
   
   if (pWindow != NULL)
   {
@@ -35,7 +35,7 @@ int CApp::OnExecute()
   
   if (OnInit() == false)
   {
-    return -1
+    return -1;
   }
   
   while (isRunning)
