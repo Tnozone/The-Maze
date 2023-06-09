@@ -2,7 +2,7 @@
 #define CAPP_H
 
 #include <SDL2/SDL.h>
-#include "./Raytrace/Image.hpp"
+#include "./RayTrace/Image.hpp"
 
 class CApp
 {
