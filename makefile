@@ -17,12 +17,12 @@ rebuildables = $(objects) $(linktarget)
 
 # Rule to perform the build
 $(linktarget): $(objects)
-  g++ -g -o $(linktarget) $(objects) $(LIBS) $(CFLAGS)
+	g++ -g -o $(linktarget) $(objects) $(LIBS) $(CFLAGS)
   
 # Create .o (object) files
 %.o: %.cpp
-  g++ -o $@ -c $< $(CFLAGS)
+	g++ -o $@ -c $< $(CFLAGS)
   
 .PHONEY:
 clean:
-  rm $(rebuildables)
+	rm $(rebuildables)
