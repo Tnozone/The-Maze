@@ -2,6 +2,7 @@
 #define CAPP_H
 
 #include <SDL2/SDL.h>
+#include "./Raytrace/Image.hpp"
 
 class CApp
 {
@@ -16,6 +17,9 @@ class CApp
     void OnExit();
     
   private:
+    // Instance of Image class to store the image
+    Image m_image;
+  
     // SDL2
     bool isRunning;
     SDL_Window *pWindow;
