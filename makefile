@@ -15,7 +15,7 @@ objects = main.o \
 # Define Rebuildables
 rebuildables = $(objects) $(linktarget)
 
-# Link the object files
+# Rule to perform the build
 $(linktarget): $(objects)
   g++ -g -o $(linktarget) $(objects) $(LIBS) $(CFLAGS)
   
