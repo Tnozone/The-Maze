@@ -10,7 +10,7 @@ class CApp
     
     int OnExecute();
     bool OnInit();
-    void OnEvent(SLD_Event *event);
+    void OnEvent(SDL_Event *event);
     void OnLoop();
     void OnRender();
     void OnExit();
@@ -20,6 +20,6 @@ class CApp
     bool isRunning;
     SDL_Window *pWindow;
     SDL_Renderer *pRenderer;
-}
+};
 
 #endif
