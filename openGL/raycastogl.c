@@ -73,10 +73,10 @@ void display()
 
 void buttons(unsigned char key,int x,int y)
 {
-  if(key=='a') { px-=5;}
-  if(key=='d') { px+=5;}
-  if(key=='w') { py-=5;}
-  if(key=='s') { py+=5;}
+  if(key=='a') { px-=10;}
+  if(key=='d') { px+=10;}
+  if(key=='w') { py-=10;}
+  if(key=='s') { py+=10;}
   glutPostRedisplay();
 }
 
