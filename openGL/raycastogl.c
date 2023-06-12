@@ -22,7 +22,7 @@ void drawPlayer()
   glEnd();
 }
 
-int mapX=24,mapY=24,mapS=64;
+int mapX=24,mapY=24,mapS=576;
 int map[]=
 {
   2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
