@@ -53,7 +53,7 @@ void DrawMap2D()
       else if(map[y*mapX+x]==1) { glColor3f(1,0,0);}
       else { glColor3f(0,0,0);}
       xo=x*mapS; yo=y*mapS;
-      glBegin()GL_QUADS;
+      glBegin(GL_QUADS);
       glVertex2i(xo , yo  );
       glVertex2i(xo , yo+mapS);
       glVertex2i(xo+mapS, yo+mapS);
