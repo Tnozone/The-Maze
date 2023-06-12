@@ -72,6 +72,33 @@ void DrawMap2D()
   }
 }
 
+void drawRays3D()
+{
+  int r,mx,my,mp,dof; float rx,ry,ra,xo,yo;
+  ra=pa;
+  for(r=0;r<1;r++)
+  {
+    //Check Horizontal Lines
+    dof=0;
+    float aTan=-1/tan(ra);
+    if(ra>PI){ ry=(((int)py>>6)<<6)-0.0001; rx(py-ry)*aTan+px; yo=-64; xo=-yo*aTan;} //Looking up
+    if(ra<PI){ ry=(((int)py>>6)<<6)+64; rx(py-ry)*aTan+px; yo=64; xo=-yo*aTan;} //Looking down
+    if(ra==0 || ra==PI) { rx=px; ry=py; dof=8;} //Looking straight left or right
+    while(dof<8)
+    {
+      mx=(int)(rx)>>6; my(int)(ry)>>6; mp=my*mapX+mx;
+      if(mp<mapX*mapY && map[mp]!=0){ dof=8;} //Hit wall
+      else{ rx+=xo; ry+=yo; dof+=1;} //next line
+    }
+    glColor3f(0,1,0);
+    glLineWidth(1);
+    glBegin(GL_LINES);
+    glVertex2i(px,py);
+    glVertex2i(rx,ry);
+    glEnd();
+  }
+}
+
 void display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
