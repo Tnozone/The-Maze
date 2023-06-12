@@ -50,7 +50,7 @@ void DrawMap2D()
     for(x=0;x<mapX;x++)
     {
       if(map[y*mapX+x]==1) { glColor3f(1,1,1);}
-      else if(map[y*mapX+x]==1) { glColor3f(1,0,0);}
+      else if(map[y*mapX+x]==2) { glColor3f(1,0,0);}
       else { glColor3f(0,0,0);}
       xo=x*mapS; yo=y*mapS;
       glBegin(GL_QUADS);
