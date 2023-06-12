@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GLUT/glut.h>
+#include <math.h>
 
-float px,py; //player position
+#define PI 3.1415926535
+
+float px,py,pdx,pdy,pa; //player position
 
 void drawPlayer()
 {
@@ -10,6 +13,12 @@ void drawPlayer()
   glPointSize(8);
   glBegin(GL_POINTS);
   glVertex2i(px,py);
+  glEnd();
+  
+  glLineWidth(3);
+  glBegin(GL_LINES);
+  glVertex2i(px,py);
+  glVertex2i(px+pdx*5, py+pdy*5);
   glEnd();
 }
 
@@ -73,10 +82,10 @@ void display()
 
 void buttons(unsigned char key,int x,int y)
 {
-  if(key=='a') { px-=10;}
-  if(key=='d') { px+=10;}
-  if(key=='w') { py-=10;}
-  if(key=='s') { py+=10;}
+  if(key=='a') { pa-=0.1; if(pa<0) { pa+=2*PI;} pdx=cos(pa)*5; pdy=sin(pa)*5;}
+  if(key=='d') { pa+=0.1; if(pa>2*PI) { pa-=2*PI;} pdx=cos(pa)*5; pdy=sin(pa)*5;}
+  if(key=='w') { px+=pdx; py+=pdy;}
+  if(key=='s') { px-=pdx; py-=pdy;}
   glutPostRedisplay();
 }
 
@@ -84,7 +93,7 @@ void init()
 {
   glClearColor(0.3,0.3,0.3,0);
   gluOrtho2D(0,1024,512,0);
-  px=300; py=300;
+  px=300; py=300; pdx=cos(pa)*5; pdy=sin(pa)*5
 }
 
 int main(int argc, char* argv[])
