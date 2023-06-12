@@ -81,12 +81,12 @@ void drawRays3D()
     //Check Horizontal Lines
     dof=0;
     float aTan=-1/tan(ra);
-    if(ra>PI){ ry=(((int)py>>6)<<6)-0.0001; rx(py-ry)*aTan+px; yo=-64; xo=-yo*aTan;} //Looking up
-    if(ra<PI){ ry=(((int)py>>6)<<6)+64; rx(py-ry)*aTan+px; yo=64; xo=-yo*aTan;} //Looking down
+    if(ra>PI){ ry=(((int)py>>6)<<6)-0.0001; rx=(py-ry)*aTan+px; yo=-64; xo=-yo*aTan;} //Looking up
+    if(ra<PI){ ry=(((int)py>>6)<<6)+64; rx=(py-ry)*aTan+px; yo=64; xo=-yo*aTan;} //Looking down
     if(ra==0 || ra==PI) { rx=px; ry=py; dof=8;} //Looking straight left or right
     while(dof<8)
     {
-      mx=(int)(rx)>>6; my(int)(ry)>>6; mp=my*mapX+mx;
+      mx=(int)(rx)>>6; my=(int)(ry)>>6; mp=my*mapX+mx;
       if(mp<mapX*mapY && map[mp]!=0){ dof=8;} //Hit wall
       else{ rx+=xo; ry+=yo; dof+=1;} //next line
     }
