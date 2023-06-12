@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 
+#include "capp.h"
 #include "quickcg.h"
 using namespace QuickCG;
 
