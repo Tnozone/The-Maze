@@ -93,7 +93,7 @@ void init()
 {
   glClearColor(0.3,0.3,0.3,0);
   gluOrtho2D(0,1024,512,0);
-  px=300; py=300; pdx=cos(pa)*5; pdy=sin(pa)*5
+  px=300; py=300; pdx=cos(pa)*5; pdy=sin(pa)*5;
 }
 
 int main(int argc, char* argv[])
