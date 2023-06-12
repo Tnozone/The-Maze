@@ -20,6 +20,15 @@ void display()
   glutSwapBuffers();
 }
 
+void buttons(unsigned char key,int x,int y)
+{
+  if(key=='a') { px-=5;}
+  if(key=='d') { px+=5;}
+  if(key=='w') { py-=5;}
+  if(key=='s') { py+=5;}
+  glutPostRedisplay();
+}
+
 void init()
 {
   glClearColor(0.3,0.3,0.3,0);
@@ -35,5 +44,6 @@ int main(int argc, char* argv[])
   glutCreateWindow("Maze");
   init();
   glutDisplayFunc(display);
+  glutKeyboardFunc(buttons);
   glutMainLoop();
 }
