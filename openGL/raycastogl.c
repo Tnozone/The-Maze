@@ -74,14 +74,20 @@ void DrawMap2D()
   }
 }
 
+float dist (float ax,float ay,float bx,float by,float ang)
+{
+  return ( sqrt((bx-ax)*(bx-ax) + (by-ay)*(by-ay)) );
+}
+
 void drawRays3D()
 {
   int r,mx,my,mp,dof; float rx,ry,ra,xo,yo;
   ra=pa;
   for(r=0;r<1;r++)
   {
-    /*//Check Horizontal Lines
+    //Check Horizontal Lines
     dof=0;
+    float disH=1000000,hx=px,hy=py;
     float aTan=-1/tan(ra);
     if(ra>PI){ ry=(((int)py>>6)<<6)-0.0001; rx=(py-ry)*aTan+px; yo=-64; xo=-yo*aTan;} //Looking up
     if(ra<PI){ ry=(((int)py>>6)<<6)+64; rx=(py-ry)*aTan+px; yo=64; xo=-yo*aTan;} //Looking down
@@ -89,18 +95,13 @@ void drawRays3D()
     while(dof<8)
     {
       mx=(int)(rx)>>6; my=(int)(ry)>>6; mp=my*mapX+mx;
-      if(mp<mapX*mapY && map[mp]!=0){ dof=8;} //Hit wall
+      if(mp>0 && mp<mapX*mapY && map[mp]!=0){ hx=rx; hy=ry; disH=dist(px,py,hx,hy,ra); dof=8;} //Hit wall
       else{ rx+=xo; ry+=yo; dof+=1;} //next line
     }
-    glColor3f(0,1,0);
-    glLineWidth(1);
-    glBegin(GL_LINES);
-    glVertex2i(px,py);
-    glVertex2i(rx,ry);
-    glEnd(); */
     
      //Check Vertical Lines
     dof=0;
+    float disV=1000000,vx=px,vy=py;
     float nTan=-tan(ra);
     if(ra>P2 && ra<P3){ rx=(((int)px>>6)<<6)-0.0001; ry=(px-rx)*nTan+py; xo=-64; yo=-xo*nTan;} //Looking left
     if(ra<P2 || ra>P3){ rx=(((int)px>>6)<<6)+64; ry=(px-rx)*nTan+py; xo=64; yo=-xo*nTan;} //Looking right
@@ -108,9 +109,11 @@ void drawRays3D()
     while(dof<8)
     {
       mx=(int)(rx)>>6; my=(int)(ry)>>6; mp=my*mapX+mx;
-      if(mp<mapX*mapY && map[mp]!=0){ dof=8;} //Hit wall
+      if(mp>0 && mp<mapX*mapY && map[mp]!=0){ vx=rx; vy=ry; disV=dist(px,py,vx,vy,ra); dof=8;} //Hit wall
       else{ rx+=xo; ry+=yo; dof+=1;} //next line
     }
+    if(disV<disH) { rx=vx; ry=vy;}
+    if(disH<disV) { rx=hx; ry=hy;}
     glColor3f(1,0,0);
     glLineWidth(1);
     glBegin(GL_LINES);
