@@ -96,7 +96,7 @@ void drawRays2D()
     while(dof<24)
     {
       mx=(int)(rx)>>6; my=(int)(ry)>>6; mp=my*mapX+mx;
-      if(mp>0 && mp<mapX*mapY && map[mp]!=0){ hx=rx; hy=ry; disH=dist(px,py,hx,hy,ra); dof=24;} //Hit wall
+      if(mp>0 && mp<mapX*mapY && map[mp]>0){ hx=rx; hy=ry; disH=dist(px,py,hx,hy,ra); dof=24;} //Hit wall
       else{ rx+=xo; ry+=yo; dof+=1;} //next line
     }
     
@@ -110,12 +110,11 @@ void drawRays2D()
     while(dof<8)
     {
       mx=(int)(rx)>>6; my=(int)(ry)>>6; mp=my*mapX+mx;
-      if(mp>0 && mp<mapX*mapY && map[mp]!=0){ vx=rx; vy=ry; disV=dist(px,py,vx,vy,ra); dof=8;} //Hit wall
+      if(mp>0 && mp<mapX*mapY && map[mp]>0){ vx=rx; vy=ry; disV=dist(px,py,vx,vy,ra); dof=8;} //Hit wall
       else{ rx+=xo; ry+=yo; dof+=1;} //next line
     }
-    if(disV<disH) { rx=vx; ry=vy; disT=disV;}
-    if(disH<disV) { rx=hx; ry=hy; disT=disH;}
-    glColor3f(1,0,0);
+    if(disV<disH) { rx=vx; ry=vy; disT=disV; glColor3f(0.9,0,0);} //Vertical wall hit
+    if(disH<disV) { rx=hx; ry=hy; disT=disH; glColor3f(0.7,0,0);} //Horizontal wall hit
     glLineWidth(3);
     glBegin(GL_LINES);
     glVertex2i(px,py);
