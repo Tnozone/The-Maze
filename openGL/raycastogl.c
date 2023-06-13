@@ -84,7 +84,7 @@ void drawRays2D()
 {
   int r,mx,my,mp,dof; float rx,ry,ra,xo,yo;
   ra=pa-DR*30; if(ra<0) { ra+=2*PI;} if(ra>2*PI) { ra-=2*PI;}
-  for(r=0;r<10;r++)
+  for(r=0;r<60;r++)
   {
     //Check Horizontal Lines
     dof=0;
@@ -92,11 +92,11 @@ void drawRays2D()
     float aTan=-1/tan(ra);
     if(ra>PI){ ry=(((int)py>>6)<<6)-0.0001; rx=(py-ry)*aTan+px; yo=-64; xo=-yo*aTan;} //Looking up
     if(ra<PI){ ry=(((int)py>>6)<<6)+64; rx=(py-ry)*aTan+px; yo=64; xo=-yo*aTan;} //Looking down
-    if(ra==0 || ra==PI) { rx=px; ry=py; dof=8;} //Looking straight left or right
-    while(dof<8)
+    if(ra==0 || ra==PI) { rx=px; ry=py; dof=24;} //Looking straight left or right
+    while(dof<24)
     {
       mx=(int)(rx)>>6; my=(int)(ry)>>6; mp=my*mapX+mx;
-      if(mp>0 && mp<mapX*mapY && map[mp]!=0){ hx=rx; hy=ry; disH=dist(px,py,hx,hy,ra); dof=8;} //Hit wall
+      if(mp>0 && mp<mapX*mapY && map[mp]!=0){ hx=rx; hy=ry; disH=dist(px,py,hx,hy,ra); dof=24;} //Hit wall
       else{ rx+=xo; ry+=yo; dof+=1;} //next line
     }
     
