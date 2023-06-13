@@ -82,7 +82,7 @@ float dist (float ax,float ay,float bx,float by,float ang)
 
 void drawRays2D()
 {
-  int r,mx,my,mp,dof; float rx,ry,ra,xo,yo;
+  int r,mx,my,mp,dof; float rx,ry,ra,xo,yo,disT;
   ra=pa-DR*30; if(ra<0) { ra+=2*PI;} if(ra>2*PI) { ra-=2*PI;}
   for(r=0;r<60;r++)
   {
@@ -113,14 +113,20 @@ void drawRays2D()
       if(mp>0 && mp<mapX*mapY && map[mp]!=0){ vx=rx; vy=ry; disV=dist(px,py,vx,vy,ra); dof=8;} //Hit wall
       else{ rx+=xo; ry+=yo; dof+=1;} //next line
     }
-    if(disV<disH) { rx=vx; ry=vy;}
-    if(disH<disV) { rx=hx; ry=hy;}
+    if(disV<disH) { rx=vx; ry=vy; disT=disV;}
+    if(disH<disV) { rx=hx; ry=hy; disT=disH;}
     glColor3f(1,0,0);
     glLineWidth(3);
     glBegin(GL_LINES);
     glVertex2i(px,py);
     glVertex2i(rx,ry);
     glEnd();
+    
+    //Draw 3D Walls
+    float ca=pa-ra; if(ca<0) { ca+=2*PI;} if(ca>2*PI) { ca-=2*PI;} disT=disT*cos(ca); //Fix fisheye
+    float lineH=(mapS*320)/disT; if(lineH>320) {lineH=320;} //Line height
+    float lineO=160-lineH/2;    //Line offset
+    glLineWidth(8); glBegin(GL_LINES); glVertex2i(r*8+530,lineO); glVertex2i(r*8+530,lineH+lineO); glEnd();
     ra+=DR; if(ra<0) { ra+=2*PI;} if(ra>2*PI) { ra-=2*PI;}
   }
 }
