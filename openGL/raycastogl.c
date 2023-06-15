@@ -3,6 +3,11 @@
 #include <GLUT/glut.h>
 #include <math.h>
 
+typedef struct
+{
+	int w,a,d,s;
+}ButtonKeys; ButtonKeys Keys;
+
 //--------------------Map
 #define mapX 8 //map width
 #define mapY 8 //map height
@@ -51,15 +56,6 @@ void drawPlayer2D()
  glColor3f(1,1,0);   glPointSize(8);    glLineWidth(4);
  glBegin(GL_POINTS); glVertex2i(px,py); glEnd();
  glBegin(GL_LINES);  glVertex2i(px,py); glVertex2i(px+pdx*20,py+pdy*20); glEnd();
-}
-
-void Buttons(unsigned char key,int x,int y)
-{
- if(key=='a'){ pa+=5; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 	
- if(key=='d'){ pa-=5; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 
- if(key=='w'){ px+=pdx*5; py+=pdy*5;}
- if(key=='s'){ px-=pdx*5; py-=pdy*5;}
- glutPostRedisplay();
 }
 
 //--------------------------------Draw Rays and Walls
@@ -121,6 +117,13 @@ void drawRays2D()
 
 void display()
 {
+	//buttons
+  if(Keys.a==1){ pa+=5; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 	
+  if(Keys.d==1){ pa-=5; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 
+  if(Keys.w==1){ px+=pdx*5; py+=pdy*5;}
+  if(Keys.s==1){ px-=pdx*5; py-=pdy*5;}
+  glutPostRedisplay();
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   DrawMap2D();
   drawPlayer2D();
@@ -133,6 +136,24 @@ void init()
   glClearColor(0.3,0.3,0.3,0);
   gluOrtho2D(0,1024,512,0);
   px=300; py=300; pdx=cos(pa)*5; pdy=sin(pa)*5;
+}
+
+void ButtonDown(unsigned char key,int x,int y)
+{
+	if(key=='a'){ Keys.a=1;}
+	if(key=='d'){ Keys.d=1;}
+	if(key=='w'){ Keys.w=1;}
+	if(key=='s'){ Keys.s=1;}
+	glutPostRedisplay();
+}
+
+void ButtonUp(unsigned char key,int x,int y)
+{
+	if(key=='a'){ Keys.a=0;}
+	if(key=='d'){ Keys.d=0;}
+	if(key=='w'){ Keys.w=0;}
+	if(key=='s'){ Keys.s=0;}
+	glutPostRedisplay();
 }
 
 void resize(int w,int h)
@@ -150,6 +171,7 @@ int main(int argc, char* argv[])
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(resize);
-  glutKeyboardFunc(Buttons);
+  glutKeyboardFunc(ButtonDown);
+  glutKeyboardFunc(ButtonUp);
   glutMainLoop();
 }
