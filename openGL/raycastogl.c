@@ -3,11 +3,6 @@
 #include <GLUT/glut.h>
 #include <math.h>
 
-typedef struct
-{
- int w,a,d,s;
-}ButtonKeys; ButtonKeys Keys;
-
 //--------------------Map
 #define mapX 8 //map width
 #define mapY 8 //map height
@@ -56,6 +51,25 @@ void drawPlayer2D()
  glColor3f(1,1,0);   glPointSize(8);    glLineWidth(4);
  glBegin(GL_POINTS); glVertex2i(px,py); glEnd();
  glBegin(GL_LINES);  glVertex2i(px,py); glVertex2i(px+pdx*20,py+pdy*20); glEnd();
+}
+
+void Buttons(unsigned char key,int x,int y)
+{
+ if(key=='a'){ pa+=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 	
+ if(key=='d'){ pa-=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 
+	
+ int xo=0; if(pdx<0){ xo=20;} else{ xo=0;}
+ int yo=0; if(pdx<0){ yo=20;} else{ yo=0;}
+ int ipx=px/64.0, ipx_add_xo=(px+xo)/64.0, ipx_sub_xo=(px-xo)/64.0;
+ int ipy=py/64.0, ipy_add_yo=(py+yo)/64.0, ipy_sub_yo=(py-yo)/64.0;
+	
+ if(key=='w')                                                                  //move forward
+ {  
+  if(map[ipy*mapX        + ipx_add_xo]==0){ px+=pdx*0.2*fps;}
+  if(map[ipy_add_yo*mapX + ipx       ]==0){ py+=pdy*0.2*fps;}
+ }
+ if(key=='s'){ px-=pdx*0.2*fps; py-=pdy*0.2*fps;}
+ glutPostRedisplay();
 }
 
 //--------------------------------Draw Rays and Walls
@@ -129,47 +143,13 @@ void display()
 {
 	//Frames per second
 	frame2=glutGet(GLUT_ELAPSED_TIME); fps=(frame2-frame1); frame1=glutGet(GLUT_ELAPSED_TIME);
-	
-	//buttons
-  if(Keys.a==1){ pa+=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 	
-  if(Keys.d==1){ pa-=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 
-	
-  int xo=0; if(pdx<0){ xo=20;} else{ xo=0;}
-  int yo=0; if(pdx<0){ yo=20;} else{ yo=0;}
-  int ipx=px/64.0, ipx_add_xo=(px+xo)/64.0, ipx_sub_xo=(px-xo)/64.0;
-  int ipy=py/64.0, ipy_add_yo=(py+yo)/64.0, ipy_sub_yo=(py-yo)/64.0;
-	
-  if(Keys.w==1)                                                                  //move forward
-  {  
-   if(map[ipy*mapX        + ipx_add_xo]==0){ px+=pdx*0.2*fps;}
-   if(map[ipy_add_yo*mapX + ipx       ]==0){ py+=pdy*0.2*fps;}
-  }
-  if(Keys.s==1){ px-=pdx*0.2*fps; py-=pdy*0.2*fps;}
-  glutPostRedisplay();
+
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   DrawMap2D();
   drawPlayer2D();
   drawRays2D();
   glutSwapBuffers();
-}
-
-void ButtonDown(unsigned char key,int x,int y)
-{
- if(key=='a'){ Keys.a=1;} 	
- if(key=='d'){ Keys.d=1;} 
- if(key=='w'){ Keys.w=1;}
- if(key=='s'){ Keys.s=1;}
- glutPostRedisplay();
-}
-
-void ButtonUp(unsigned char key,int x,int y)
-{
- if(key=='a'){ Keys.a=0;} 	
- if(key=='d'){ Keys.d=0;} 
- if(key=='w'){ Keys.w=0;}
- if(key=='s'){ Keys.s=0;}
- glutPostRedisplay();
 }
 
 void resize(int w,int h)
@@ -187,7 +167,6 @@ int main(int argc, char* argv[])
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(resize);
-  glutKeyboardFunc(ButtonDown);
-  glutKeyboardFunc(ButtonUp);
+  glutKeyboardFunc(Buttons);
   glutMainLoop();
 }
