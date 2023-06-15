@@ -53,6 +53,9 @@ void drawPlayer2D()
  glBegin(GL_LINES);  glVertex2i(px,py); glVertex2i(px+pdx*20,py+pdy*20); glEnd();
 }
 
+float frame1,frame2,fps;
+frame2=glutGet(GLUT_ELAPSED_TIME); fps=(frame2-frame1); frame1=glutGet(GLUT_ELAPSED_TIME);
+
 void Buttons(unsigned char key,int x,int y)
 {
  if(key=='a'){ pa+=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 	
@@ -137,14 +140,8 @@ void init()
   px=300; py=300; pdx=cos(pa)*5; pdy=sin(pa)*5;
 }
 
-float frame1,frame2,fps;
-
 void display()
 {
-	//Frames per second
-	frame2=glutGet(GLUT_ELAPSED_TIME); fps=(frame2-frame1); frame1=glutGet(GLUT_ELAPSED_TIME);
-
-
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   DrawMap2D();
   drawPlayer2D();
