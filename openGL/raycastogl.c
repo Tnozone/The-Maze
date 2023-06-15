@@ -5,7 +5,7 @@
 
 typedef struct
 {
-	int w,a,d,s;
+ int w,a,d,s;
 }ButtonKeys; ButtonKeys Keys;
 
 //--------------------Map
@@ -46,8 +46,8 @@ void DrawMap2D()
 }
 
 //--------------------------------Player
-float degToRad(int a) { return a*M_PI/180.0;}
-int FixAng(int a){ if(a>359){ a-=360;} if(a<0){ a+=360;} return a;}
+float degToRad(float a) { return a*M_PI/180.0;}
+float FixAng(float a){ if(a>359){ a-=360;} if(a<0){ a+=360;} return a;}
 
 float px,py,pdx,pdy,pa; //player position
 
@@ -113,15 +113,28 @@ void drawRays2D()
    
   ra=FixAng(ra-1);                                                              //go to next ray
  }
+}//------------------------------------
+
+
+void init()
+{
+  glClearColor(0.3,0.3,0.3,0);
+  gluOrtho2D(0,1024,512,0);
+  px=300; py=300; pdx=cos(pa)*5; pdy=sin(pa)*5;
 }
+
+float frame1,frame2,fps;
 
 void display()
 {
+	//Frames per second
+	frame2=glutGet(GLUT_ELAPSED_TIME); fps=(frame2-frame1); frame1=glutGet(GLUT_ELAPSED_TIME);
+	
 	//buttons
-  if(Keys.a==1){ pa+=5; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 	
-  if(Keys.d==1){ pa-=5; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 
-  if(Keys.w==1){ px+=pdx*5; py+=pdy*5;}
-  if(Keys.s==1){ px-=pdx*5; py-=pdy*5;}
+  if(Keys.a==1){ pa+=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 	
+  if(Keys.d==1){ pa-=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 
+  if(Keys.w==1){ px+=pdx*0.2*fps; py+=pdy*0.2*fps;}
+  if(Keys.s==1){ px-=pdx*0.2*fps; py-=pdy*0.2*fps;}
   glutPostRedisplay();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -131,29 +144,22 @@ void display()
   glutSwapBuffers();
 }
 
-void init()
-{
-  glClearColor(0.3,0.3,0.3,0);
-  gluOrtho2D(0,1024,512,0);
-  px=300; py=300; pdx=cos(pa)*5; pdy=sin(pa)*5;
-}
-
 void ButtonDown(unsigned char key,int x,int y)
 {
-	if(key=='a'){ Keys.a=1;}
-	if(key=='d'){ Keys.d=1;}
-	if(key=='w'){ Keys.w=1;}
-	if(key=='s'){ Keys.s=1;}
-	glutPostRedisplay();
+ if(key=='a'){ Keys.a=1;} 	
+ if(key=='d'){ Keys.d=1;} 
+ if(key=='w'){ Keys.w=1;}
+ if(key=='s'){ Keys.s=1;}
+ glutPostRedisplay();
 }
 
 void ButtonUp(unsigned char key,int x,int y)
 {
-	if(key=='a'){ Keys.a=0;}
-	if(key=='d'){ Keys.d=0;}
-	if(key=='w'){ Keys.w=0;}
-	if(key=='s'){ Keys.s=0;}
-	glutPostRedisplay();
+ if(key=='a'){ Keys.a=0;} 	
+ if(key=='d'){ Keys.d=0;} 
+ if(key=='w'){ Keys.w=0;}
+ if(key=='s'){ Keys.s=0;}
+ glutPostRedisplay();
 }
 
 void resize(int w,int h)
