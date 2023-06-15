@@ -81,8 +81,8 @@ int main(int /*argc*/, char */*argv*/[])
  //generate some textures
   unsigned long tw, th;
   loadImage(texture[0], tw, th, "pics/eagle.png");
-  loadImage(texture[1], tw, th, "pics/redbrick.png");
-  loadImage(texture[2], tw, th, "pics/purplestone.png");
+  loadImage(texture[1], tw, th, "Maze-pics/inner-wall.png");
+  loadImage(texture[2], tw, th, "Maze-pics/outer-wall.png");
 #endif
 
   //start the main loop
