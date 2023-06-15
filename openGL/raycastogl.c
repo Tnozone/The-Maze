@@ -123,6 +123,8 @@ void init()
   px=300; py=300; pdx=cos(pa)*5; pdy=sin(pa)*5;
 }
 
+float frame1,frame2,fps;
+
 void display()
 {
   //frames per second
