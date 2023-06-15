@@ -158,14 +158,21 @@ void init()
   px=300; py=300; pdx=cos(pa)*5; pdy=sin(pa)*5;
 }
 
+void resize(int w,int h)
+{
+  glutReshapeWindow(1024,512);
+}
+
 int main(int argc, char* argv[])
 {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowSize(1024, 512);
+  glutInitWindowPosition(200,200);
   glutCreateWindow("Maze");
   init();
   glutDisplayFunc(display);
+  glutReshapeFunc(resize);
   glutKeyboardFunc(buttons);
   glutMainLoop();
 }
