@@ -140,15 +140,11 @@ void display()
   int ipy=py/64.0, ipy_add_yo=(py+yo)/64.0, ipy_sub_yo=(py-yo)/64.0;
 	
   if(Keys.w==1)                                                                  //move forward
- {  
-  if(mapW[ipy*mapX        + ipx_add_xo]==0){ px+=pdx*0.2*fps;}
-  if(mapW[ipy_add_yo*mapX + ipx       ]==0){ py+=pdy*0.2*fps;}
- }
- if(Keys.s==1)                                                                  //move backward
- { 
-  if(mapW[ipy*mapX        + ipx_sub_xo]==0){ px-=pdx*0.2*fps;}
-  if(mapW[ipy_sub_yo*mapX + ipx       ]==0){ py-=pdy*0.2*fps;}
- }
+  {  
+   if(map[ipy*mapX        + ipx_add_xo]==0){ px+=pdx*0.2*fps;}
+   if(map[ipy_add_yo*mapX + ipx       ]==0){ py+=pdy*0.2*fps;}
+  }
+  if(Keys.s==1){ px-=pdx*0.2*fps; py-=pdy*0.2*fps;}
   glutPostRedisplay();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
