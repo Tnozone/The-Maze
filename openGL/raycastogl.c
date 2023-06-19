@@ -290,7 +290,7 @@ void drawRays2D()
 
   //---draw walls---
   int y;
-  float ty=ty_off*ty_step//+hmt*32;
+  float ty=ty_off*ty_step;//+hmt*32;
   float tx;
   if(shade==1){ tx=(int)(rx/2.0)%32; if(ra>180){ tx=31-tx;}}  
   else        { tx=(int)(ry/2.0)%32; if(ra>90 && ra<270){ tx=31-tx;}}
