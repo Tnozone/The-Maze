@@ -3,6 +3,7 @@
 #include <math.h>
 
 #include "../Maze-pics/maze-textures.ppm"
+#include "../Maze-pics/clouds.ppm"
 
 float degToRad(float a) { return a*M_PI/180.0;}
 float FixAng(float a){ if(a>359){ a-=360;} if(a<0){ a+=360;} return a;}
@@ -90,8 +91,8 @@ void drawPlayer2D()
 //---------------------------Draw Rays and Walls--------------------------------
 void drawRays2D()
 {
- glColor3f(0,1,1); glBegin(GL_QUADS); glVertex2i(526,  0); glVertex2i(1006,  0); glVertex2i(1006,160); glVertex2i(526,160); glEnd();	
- glColor3f(0,0,1); glBegin(GL_QUADS); glVertex2i(526,160); glVertex2i(1006,160); glVertex2i(1006,320); glVertex2i(526,320); glEnd();	 	
+ //glColor3f(0,1,1); glBegin(GL_QUADS); glVertex2i(526,  0); glVertex2i(1006,  0); glVertex2i(1006,160); glVertex2i(526,160); glEnd();	
+ //glColor3f(0,0,1); glBegin(GL_QUADS); glVertex2i(526,160); glVertex2i(1006,160); glVertex2i(1006,320); glVertex2i(526,320); glEnd();	 	
 	
  int r,mx,my,mp,dof,side; float vx,vy,rx,ry,ra,xo,yo,disV,disH; 
  
@@ -183,6 +184,21 @@ void drawRays2D()
  }
 }//-----------------------------------------------------------------------------
 
+void drawSky()     //draw sky and rotate based on player rotation
+{int x,y;
+ for(y=0;y<40;y++)
+ {
+  for(x=0;x<120;x++)
+  {
+   int xo=(int)pa*2-x; if(xo<0){ xo+=120;} xo=xo % 120; //return 0-120 based on player angle
+   int pixel=(y*120+xo)*3;
+   int red   =sky[pixel+0];
+   int green =sky[pixel+1];
+   int blue  =sky[pixel+2];
+   if(mp>0){ glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8,640-y); glEnd();}
+  }	
+ }
+}
 
 void init()
 {
@@ -222,6 +238,7 @@ void display()
  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
  drawMap2D();
  drawPlayer2D();
+ drawSky();
  drawRays2D();	
  glutSwapBuffers();  
 }
