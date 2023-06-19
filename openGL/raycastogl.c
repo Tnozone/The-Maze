@@ -169,7 +169,7 @@ void drawRays2D()
 
  //---draw ceiling---
   mp=mapC[(int)(ty/32.0)*mapX+(int)(tx/32.0)]*32*32;
-  c=All_Textures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]*0.7;
+  c=All_textures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]*0.7;
   glColor3f(c/2.0,c/1.2,c/2.0);glPointSize(8);glBegin(GL_POINTS);glVertex2i(r*8+530,320-y);glEnd();
  }
  
