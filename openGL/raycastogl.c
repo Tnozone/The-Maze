@@ -150,9 +150,9 @@ void drawRays2D()
   for(y=0;y<lineH;y++)
   {
    int pixel=((int)ty*32+(int)tx)*3+(hmt*32*32*3);
-   int red=All-textures[pixel+0]*shade;
-   int green=All-textures[pixel+1]*shade;
-   int blue=All-textures[pixel+2]*shade;
+   int red=All_textures[pixel+0]*shade;
+   int green=All_textures[pixel+1]*shade;
+   int blue=All_textures[pixel+2]*shade;
    glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8+530,y+lineOff); glEnd();
    ty+=ty_step;
   }
@@ -164,7 +164,7 @@ void drawRays2D()
   tx=px/2 + cos(deg)*158*32/dy/raFix;
   ty=py/2 - sin(deg)*158*32/dy/raFix;
   int mp=mapF[(int)(ty/32.0)*mapX+(int)(tx/32.0)]*32*32;
-  float c=All_Textures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]*0.7;
+  float c=All_textures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]*0.7;
   glColor3f(c/1.3,c/1.3,c);glPointSize(8);glBegin(GL_POINTS);glVertex2i(r*8+530,y);glEnd();
 
  //---draw ceiling---
