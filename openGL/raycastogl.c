@@ -290,18 +290,23 @@ void drawRays2D()
 
   //---draw walls---
   int y;
-  float ty=ty_off*ty_step+hmt*32;
+  float ty=ty_off*ty_step//+hmt*32;
   float tx;
   if(shade==1){ tx=(int)(rx/2.0)%32; if(ra>180){ tx=31-tx;}}  
   else        { tx=(int)(ry/2.0)%32; if(ra>90 && ra<270){ tx=31-tx;}}
   for(y=0;y<lineH;y++)
   {
-   float c=All_Textures[(int)(ty)*32 + (int)(tx)]*shade;
-   if(hmt==0){ glColor3f(c    , c/2.0, c/2.0);} //checkerboard red
-   if(hmt==1){ glColor3f(c    , c    , c/2.0);} //Brick yellow
-   if(hmt==2){ glColor3f(c/2.0, c/2.0, c    );} //window blue
-   if(hmt==3){ glColor3f(c/2.0, c    , c/2.0);} //door green
-   glPointSize(8);glBegin(GL_POINTS);glVertex2i(r*8+530,y+lineOff);glEnd();//draw vertical wall  
+   //float c=All_Textures[(int)(ty)*32 + (int)(tx)]*shade;
+   //if(hmt==0){ glColor3f(c    , c/2.0, c/2.0);} //checkerboard red
+   //if(hmt==1){ glColor3f(c    , c    , c/2.0);} //Brick yellow
+   //if(hmt==2){ glColor3f(c/2.0, c/2.0, c    );} //window blue
+   //if(hmt==3){ glColor3f(c/2.0, c    , c/2.0);} //door green
+   //glPointSize(8);glBegin(GL_POINTS);glVertex2i(r*8+530,y+lineOff);glEnd();//draw vertical wall 
+   int pixel=((int)ty*32+(int)tx)*3;
+   int red=inner[pixel+0]*shade;
+   int green=inner[pixel+1]*shade;
+   int blue=inner[pixel+2]*shade;
+   glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8+530,y+lineOff); glEnd();
    ty+=ty_step;
   }
  
@@ -364,21 +369,7 @@ void display()
  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
  drawMap2D();
  drawPlayer2D();
- drawRays2D();
-
- int x,y;
- for(y=0;y<32;y++)
- {
-  for(x=0;x<32;x++)	
-  {
-   int pixel=(y*32+x)*3;
-   int red=inner[pixel+0];
-   int green=inner[pixel+1];
-   int blue=inner[pixel+2];
-   glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(x*8,y*8); glEnd();
-  }
- }
-	
+ drawRays2D();	
  glutSwapBuffers();  
 }
 
