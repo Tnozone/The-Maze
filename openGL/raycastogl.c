@@ -27,34 +27,34 @@ int mapW[]=          //walls
  1,1,1,1,1,3,1,1,
  1,0,0,1,0,0,0,1,
  1,0,0,4,0,2,0,1,
- 1,1,4,1,0,0,0,1,
- 2,0,0,0,0,0,0,1,
- 2,0,0,0,0,1,0,1,
- 2,0,0,0,0,0,0,1,
+ 1,0,0,1,0,0,0,1,
+ 2,0,0,1,0,0,0,1,
+ 2,0,0,4,0,1,0,1,
+ 2,0,0,1,0,0,0,1,
  1,1,3,1,3,1,3,1,	
 };
 
 int mapF[]=          //floors
 {
  0,0,0,0,0,0,0,0,
- 0,0,0,0,1,1,0,0,
+ 0,3,0,0,1,1,0,0,
  0,0,0,0,2,0,0,0,
+ 0,0,0,0,1,0,0,0,
+ 0,0,2,0,1,0,0,0,
  0,0,0,0,0,0,0,0,
- 0,0,2,0,0,0,0,0,
- 0,0,0,0,0,0,0,0,
- 0,1,1,1,1,0,0,0,
+ 0,1,1,1,1,0,2,0,
  0,0,0,0,0,0,0,0,	
 };
 
 int mapC[]=          //ceiling
 {
  0,0,0,0,0,0,0,0,
- 0,0,0,0,0,0,0,0,
+ 0,3,0,0,0,0,0,0,
  0,0,0,0,0,0,0,0,
  0,0,0,0,0,0,1,0,
- 0,1,3,1,0,0,0,0,
+ 0,1,2,1,0,0,0,0,
  0,0,0,0,0,0,0,0,
- 0,0,0,0,0,0,0,0,
+ 0,0,0,1,1,1,0,0,
  0,0,0,0,0,0,0,0,	
 };
 
@@ -164,13 +164,19 @@ void drawRays2D()
   tx=px/2 + cos(deg)*158*32/dy/raFix;
   ty=py/2 - sin(deg)*158*32/dy/raFix;
   int mp=mapF[(int)(ty/32.0)*mapX+(int)(tx/32.0)]*32*32;
-  float c=All_textures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]*0.7;
-  glColor3f(c/1.3,c/1.3,c);glPointSize(8);glBegin(GL_POINTS);glVertex2i(r*8+530,y);glEnd();
+  int pixel=(((int)(ty)&31)*32 + ((int)(tx)&31))*3+mp*3;
+  int red=All_textures[pixel+0]*0.7;
+  int green=All_textures[pixel+1]*0.7;
+  int blue=All_textures[pixel+2]*0.7;
+  glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8+530,y); glEnd();
 
  //---draw ceiling---
   mp=mapC[(int)(ty/32.0)*mapX+(int)(tx/32.0)]*32*32;
-  c=All_textures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]*0.7;
-  glColor3f(c/2.0,c/1.2,c/2.0);glPointSize(8);glBegin(GL_POINTS);glVertex2i(r*8+530,320-y);glEnd();
+  pixel=(((int)(ty)&31)*32 + ((int)(tx)&31))*3+mp*3;
+  red=All_textures[pixel+0];
+  green=All_textures[pixel+1];
+  blue=All_textures[pixel+2];
+  glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8+530,320-y); glEnd();
  }
  
  ra=FixAng(ra-1);                                                               //go to next ray, 60 total
