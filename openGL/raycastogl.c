@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "../Maze-pics/inner-wall.ppm"
+
 float degToRad(float a) { return a*M_PI/180.0;}
 float FixAng(float a){ if(a>359){ a-=360;} if(a<0){ a+=360;} return a;}
 float distance(ax,ay,bx,by,ang){ return cos(degToRad(ang))*(bx-ax)-sin(degToRad(ang))*(by-ay);}
@@ -363,6 +365,20 @@ void display()
  drawMap2D();
  drawPlayer2D();
  drawRays2D();
+
+ int x,y;
+ for(y=0;y<32;y++)
+ {
+  for(x=0;x<32;x++	
+  {
+   int pixel=(y*32+x)*3;
+   int red=inner[pixel+0];
+   int green=inner[pixel+1];
+   int blue=inner[pixel+2];
+   glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(x*8,y*8); glEnd();
+  }
+ }
+	
  glutSwapBuffers();  
 }
 
