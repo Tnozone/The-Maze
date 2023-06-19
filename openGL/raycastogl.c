@@ -369,7 +369,7 @@ void display()
  int x,y;
  for(y=0;y<32;y++)
  {
-  for(x=0;x<32;x++	
+  for(x=0;x<32;x++)	
   {
    int pixel=(y*32+x)*3;
    int red=inner[pixel+0];
