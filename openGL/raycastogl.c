@@ -13,6 +13,8 @@ float FixAng(float a){ if(a>359){ a-=360;} if(a<0){ a+=360;} return a;}
 float distance(ax,ay,bx,by,ang){ return cos(degToRad(ang))*(bx-ax)-sin(degToRad(ang))*(by-ay);}
 float px,py,pdx,pdy,pa;
 float frame1,frame2,fps;
+int gameState=0, timer=0; //game state. init, start screen, game loop, win/lose
+float fade=0;             //the 3 screens can fade up from black
 
 typedef struct
 {
@@ -93,15 +95,12 @@ void drawPlayer2D()
 
 //---------------------------Draw Rays and Walls--------------------------------
 void drawRays2D()
-{
- //glColor3f(0,1,1); glBegin(GL_QUADS); glVertex2i(526,  0); glVertex2i(1006,  0); glVertex2i(1006,160); glVertex2i(526,160); glEnd();	
- //glColor3f(0,0,1); glBegin(GL_QUADS); glVertex2i(526,160); glVertex2i(1006,160); glVertex2i(1006,320); glVertex2i(526,320); glEnd();	 	
-	
+{	
  int r,mx,my,mp,dof,side; float vx,vy,rx,ry,ra,xo,yo,disV,disH; 
  
  ra=FixAng(pa+30);                                                              //ray set back 30 degrees
  
- for(r=0;r<60;r++)
+ for(r=0;r<120;r++)
  {
   int vmt=0,hmt=0;                                                              //vertical and horizontal map texture number 
   //---Vertical--- 
@@ -136,54 +135,52 @@ void drawRays2D()
   float shade=1;
   glColor3f(0,0.8,0);
   if(disV<disH){ hmt=vmt; shade=0.5; rx=vx; ry=vy; disH=disV; glColor3f(0,0.6,0);}//horizontal hit first
-  glLineWidth(2); glBegin(GL_LINES); glVertex2i(px,py); glVertex2i(rx,ry); glEnd();//draw 2D ray
     
   int ca=FixAng(pa-ra); disH=disH*cos(degToRad(ca));                            //fix fisheye 
-  int lineH = (mapS*320)/(disH); 
+  int lineH = (mapS*640)/(disH); 
   float ty_step=32.0/(float)lineH; 
   float ty_off=0; 
-  if(lineH>320){ ty_off=(lineH-320)/2.0; lineH=320;}                            //line height and limit
-  int lineOff = 160 - (lineH>>1);                                               //line offset
+  if(lineH>640){ ty_off=(lineH-640)/2.0; lineH=640;}                            //line height and limit
+  int lineOff = 320 - (lineH>>1);                                               //line offset
+
+  depth[r]=disH; //save this line's depth
 
   //---draw walls---
-  int y;
-  float ty=ty_off*ty_step;//+hmt*32;
-  float tx;
-  if(shade==1){ tx=(int)(rx/2.0)%32; if(ra>180){ tx=31-tx;}}  
-  else        { tx=(int)(ry/2.0)%32; if(ra>90 && ra<270){ tx=31-tx;}}
-  for(y=0;y<lineH;y++)
-  {
-   int pixel=((int)ty*32+(int)tx)*3+(hmt*32*32*3);
-   int red=All_textures[pixel+0]*shade;
-   int green=All_textures[pixel+1]*shade;
-   int blue=All_textures[pixel+2]*shade;
-   glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8+530,y+lineOff); glEnd();
-   ty+=ty_step;
-  }
- 
-  //---draw floors---
- for(y=lineOff+lineH;y<320;y++)
+ for(y=lineOff+lineH;y<640;y++)
  {
-  float dy=y-(320/2.0), deg=degToRad(ra), raFix=cos(degToRad(FixAng(pa-ra)));
-  tx=px/2 + cos(deg)*158*32/dy/raFix;
-  ty=py/2 - sin(deg)*158*32/dy/raFix;
+  float dy=y-(640/2.0), deg=degToRad(ra), raFix=cos(degToRad(FixAng(pa-ra)));
+  tx=px/2 + cos(deg)*158*2*32/dy/raFix;
+  ty=py/2 - sin(deg)*158*2*32/dy/raFix;
   int mp=mapF[(int)(ty/32.0)*mapX+(int)(tx/32.0)]*32*32;
   int pixel=(((int)(ty)&31)*32 + ((int)(tx)&31))*3+mp*3;
-  int red=All_textures[pixel+0]*0.7;
-  int green=All_textures[pixel+1]*0.7;
-  int blue=All_textures[pixel+2]*0.7;
-  glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8+530,y); glEnd();
+  int red   =All_textures[pixel+0]*0.7;
+  int green =All_textures[pixel+1]*0.7;
+  int blue  =All_textures[pixel+2]*0.7;
+  glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8,y); glEnd();
+ 
+  //---draw floors---
+ for(y=lineOff+lineH;y<640;y++)
+ {
+  float dy=y-(640/2.0), deg=degToRad(ra), raFix=cos(degToRad(FixAng(pa-ra)));
+  tx=px/2 + cos(deg)*158*2*32/dy/raFix;
+  ty=py/2 - sin(deg)*158*2*32/dy/raFix;
+  int mp=mapF[(int)(ty/32.0)*mapX+(int)(tx/32.0)]*32*32;
+  int pixel=(((int)(ty)&31)*32 + ((int)(tx)&31))*3+mp*3;
+  int red   =All_textures[pixel+0]*0.7;
+  int green =All_textures[pixel+1]*0.7;
+  int blue  =All_textures[pixel+2]*0.7;
+  glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8,y); glEnd();
 
  //---draw ceiling---
   mp=mapC[(int)(ty/32.0)*mapX+(int)(tx/32.0)]*32*32;
   pixel=(((int)(ty)&31)*32 + ((int)(tx)&31))*3+mp*3;
-  red=All_textures[pixel+0];
-  green=All_textures[pixel+1];
-  blue=All_textures[pixel+2];
-  glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8+530,320-y); glEnd();
+  red   =All_textures[pixel+0];
+  green =All_textures[pixel+1];
+  blue  =All_textures[pixel+2];
+  if(mp>0){ glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8,640-y); glEnd();}
  }
  
- ra=FixAng(ra-1);                                                               //go to next ray, 60 total
+ ra=FixAng(ra-0.5);                                                               //go to next ray, 60 total
  }
 }//-----------------------------------------------------------------------------
 
@@ -198,51 +195,84 @@ void drawSky()     //draw sky and rotate based on player rotation
    int red   =sky[pixel+0];
    int green =sky[pixel+1];
    int blue  =sky[pixel+2];
-   if(mp>0){ glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8,640-y); glEnd();}
+   glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(x*8,y*8); glEnd();
   }	
  }
 }
 
-void init()
+void screen(int v) //draw any full screen image. 120x80 pixels
 {
- glClearColor(0.3,0.3,0.3,0);
- gluOrtho2D(0,1024,510,0);
- px=150; py=400; pa=90;
- pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));                                 //init player
+ int x,y;
+ int *T;
+ if(v==1){ T=title;}
+ if(v==2){ T=win;}
+ if(v==3){ T=lose;}
+ for(y=0;y<80;y++)
+ {
+  for(x=0;x<120;x++)
+  {
+   int pixel=(y*120+x)*3;
+   int red   =T[pixel+0]*fade;
+   int green =T[pixel+1]*fade;
+   int blue  =T[pixel+2]*fade;
+   glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(x*8,y*8); glEnd();
+  }	
+ }	
+ if(fade<1){ fade+=0.001*fps;} 
+ if(fade>1){ fade=1;}
 }
 
+void init()//init all variables when game starts
+{
+ glClearColor(0.3,0.3,0.3,0);
+ px=150; py=400; pa=90;
+ pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));                                 //init player
+ mapW[19]=4; mapW[26]=4; //close doors
+
+ sp[0].type=1; sp[0].state=1; sp[0].map=0; sp[0].x=1.5*64; sp[0].y=5*64;   sp[0].z=20; //key
+ sp[1].type=2; sp[1].state=1; sp[1].map=1; sp[1].x=1.5*64; sp[1].y=4.5*64; sp[1].z= 0; //light 1
+ sp[2].type=2; sp[2].state=1; sp[2].map=1; sp[2].x=3.5*64; sp[2].y=4.5*64; sp[2].z= 0; //light 2
+ sp[3].type=3; sp[3].state=1; sp[3].map=2; sp[3].x=2.5*64; sp[3].y=2*64;   sp[3].z=20; //enemy
+}
 
 void display()
 {  
  //frames per second
  frame2=glutGet(GLUT_ELAPSED_TIME); fps=(frame2-frame1); frame1=glutGet(GLUT_ELAPSED_TIME); 
+ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
- //buttons
- if(Keys.a==1){ pa+=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 	
- if(Keys.d==1){ pa-=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 
+ if(gameState==0){ init(); fade=0; timer=0; gameState=1;} //init game
+ if(gameState==1){ screen(1); timer+=1*fps; if(timer>2000){ fade=0; timer=0; gameState=2;}} //start screen
+ if(gameState==2) //The main game loop
+ {
+  //buttons
+  if(Keys.a==1){ pa+=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 	
+  if(Keys.d==1){ pa-=0.2*fps; pa=FixAng(pa); pdx=cos(degToRad(pa)); pdy=-sin(degToRad(pa));} 
 
- int xo=0; if(pdx<0){ xo=-20;} else{ xo=20;}                                    //x offset to check map
- int yo=0; if(pdy<0){ yo=-20;} else{ yo=20;}                                    //y offset to check map
- int ipx=px/64.0, ipx_add_xo=(px+xo)/64.0, ipx_sub_xo=(px-xo)/64.0;             //x position and offset
- int ipy=py/64.0, ipy_add_yo=(py+yo)/64.0, ipy_sub_yo=(py-yo)/64.0;             //y position and offset
- if(Keys.w==1)                                                                  //move forward
- {  
-  if(mapW[ipy*mapX        + ipx_add_xo]==0){ px+=pdx*0.2*fps;}
-  if(mapW[ipy_add_yo*mapX + ipx       ]==0){ py+=pdy*0.2*fps;}
+  int xo=0; if(pdx<0){ xo=-20;} else{ xo=20;}                                    //x offset to check map
+  int yo=0; if(pdy<0){ yo=-20;} else{ yo=20;}                                    //y offset to check map
+  int ipx=px/64.0, ipx_add_xo=(px+xo)/64.0, ipx_sub_xo=(px-xo)/64.0;             //x position and offset
+  int ipy=py/64.0, ipy_add_yo=(py+yo)/64.0, ipy_sub_yo=(py-yo)/64.0;             //y position and offset
+  if(Keys.w==1)                                                                  //move forward
+  {  
+   if(mapW[ipy*mapX        + ipx_add_xo]==0){ px+=pdx*0.2*fps;}
+   if(mapW[ipy_add_yo*mapX + ipx       ]==0){ py+=pdy*0.2*fps;}
+  }
+  if(Keys.s==1)                                                                  //move backward
+  { 
+   if(mapW[ipy*mapX        + ipx_sub_xo]==0){ px-=pdx*0.2*fps;}
+   if(mapW[ipy_sub_yo*mapX + ipx       ]==0){ py-=pdy*0.2*fps;}
+  } 
+  drawSky();
+  drawRays2D();
+  drawSprite();
+  if( (int)px>>6==1 && (int)py>>6==1 ){ fade=0; timer=0; gameState=3;} //Entered block 1, Win game!!
  }
- if(Keys.s==1)                                                                  //move backward
- { 
-  if(mapW[ipy*mapX        + ipx_sub_xo]==0){ px-=pdx*0.2*fps;}
-  if(mapW[ipy_sub_yo*mapX + ipx       ]==0){ py-=pdy*0.2*fps;}
- } 
+
+ if(gameState==3){ screen(2); timer+=1*fps; if(timer>2000){ fade=0; timer=0; gameState=0;}} //won screen
+ if(gameState==4){ screen(3); timer+=1*fps; if(timer>2000){ fade=0; timer=0; gameState=0;}} //lost screen
 
  glutPostRedisplay();
- 
- glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
- drawMap2D();
- drawPlayer2D();
- drawSky();
- drawRays2D();	
  glutSwapBuffers();  
 }
 
@@ -252,7 +282,7 @@ void ButtonDown(unsigned char key,int x,int y)                                  
  if(key=='d'){ Keys.d=1;} 
  if(key=='w'){ Keys.w=1;}
  if(key=='s'){ Keys.s=1;}
- if(key=='e')             //open doors
+ if(key=='e' && sp[0].state==0)             //open doors
  { 
   int xo=0; if(pdx<0){ xo=-25;} else{ xo=25;}
   int yo=0; if(pdy<0){ yo=-25;} else{ yo=25;} 
@@ -282,9 +312,10 @@ int main(int argc, char* argv[])
 { 
  glutInit(&argc, argv);
  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
- glutInitWindowSize(1024,510);
- glutInitWindowPosition(200,200);
- glutCreateWindow("The Maze");
+ glutInitWindowSize(960,640);
+ glutInitWindowPosition( glutGet(GLUT_SCREEN_WIDTH)/2-960/2 ,glutGet(GLUT_SCREEN_HEIGHT)/2-640/2 );
+ glutCreateWindow("Maze");
+ gluOrtho2D(0,960,640,0);
  init();
  glutDisplayFunc(display);
  glutReshapeFunc(resize);
