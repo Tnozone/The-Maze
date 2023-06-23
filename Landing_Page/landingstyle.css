@@ -1,0 +1,59 @@
+* {
+  background-color: white;
+  font-family: sans-serif;
+  color: black;
+}
+
+p {
+  font-size: 20px;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+h4 {
+  font-size: 25px;
+}
+
+header {
+  background-color: #50C878;
+}
+
+header img {
+  max-width: 100%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+}
+
+nav li {
+  color: #0096FF;
+  font-size: 25px;
+}
+
+nav li:hover {
+  color: #E97451;
+}
+
+.feature {
+  text-align: center;
+}
+
+.feature iframe {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about {
+  text-align: center;
+}
+
+.about a {
+  text-align: left;
+}
