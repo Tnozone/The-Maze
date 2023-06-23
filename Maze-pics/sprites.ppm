@@ -1,4 +1,4 @@
-int sprite[]=
+int sprites[]=
 {
 255,
 0,
