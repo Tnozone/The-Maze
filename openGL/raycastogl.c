@@ -7,6 +7,7 @@
 #include "../Maze-pics/lose_screen.ppm"
 #include "../Maze-pics/win_screen.ppm"
 #include "../Maze-pics/title_screen.ppm"
+#include "../Maze-pics/sprites.ppm"
 
 float degToRad(float a) { return a*M_PI/180.0;}
 float FixAng(float a){ if(a>359){ a-=360;} if(a<0){ a+=360;} return a;}
