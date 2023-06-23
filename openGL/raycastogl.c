@@ -213,19 +213,21 @@ void drawRays2D()
   int lineOff = 320 - (lineH>>1);                                               //line offset
 
   depth[r]=disH; //save this line's depth
-
   //---draw walls---
- for(y=lineOff+lineH;y<640;y++)
- {
-  float dy=y-(640/2.0), deg=degToRad(ra), raFix=cos(degToRad(FixAng(pa-ra)));
-  tx=px/2 + cos(deg)*158*2*32/dy/raFix;
-  ty=py/2 - sin(deg)*158*2*32/dy/raFix;
-  int mp=mapF[(int)(ty/32.0)*mapX+(int)(tx/32.0)]*32*32;
-  int pixel=(((int)(ty)&31)*32 + ((int)(tx)&31))*3+mp*3;
-  int red   =All_textures[pixel+0]*0.7;
-  int green =All_textures[pixel+1]*0.7;
-  int blue  =All_textures[pixel+2]*0.7;
-  glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8,y); glEnd();
+  int y;
+  float ty=ty_off*ty_step;//+hmt*32;
+  float tx;
+  if(shade==1){ tx=(int)(rx/2.0)%32; if(ra>180){ tx=31-tx;}}  
+  else        { tx=(int)(ry/2.0)%32; if(ra>90 && ra<270){ tx=31-tx;}}
+  for(y=0;y<lineH;y++)
+  {
+   int pixel=((int)ty*32+(int)tx)*3+(hmt*32*32*3);
+   int red   =All_textures[pixel+0]*shade;
+   int green =All_textures[pixel+1]*shade;
+   int blue  =All_textures[pixel+2]*shade;
+   glPointSize(8); glColor3ub(red,green,blue); glBegin(GL_POINTS); glVertex2i(r*8,y+lineOff); glEnd();
+   ty+=ty_step;
+  }
  
   //---draw floors---
  for(y=lineOff+lineH;y<640;y++)
