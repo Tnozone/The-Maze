@@ -7,6 +7,7 @@
 p {
   font-size: 20px;
   background-color: #50C878;
+  background-size: auto 40px;
 }
 
 h1 {
@@ -16,6 +17,7 @@ h1 {
 h2 {
   font-size: 30px;
   background-color: #964B00;
+  color: white;
 }
 
 h4 {
@@ -23,6 +25,7 @@ h4 {
 }
 
 header {
+  text-align: center;
   background-color: #50C878;
 }
 
@@ -35,6 +38,7 @@ header img {
 }
 
 nav li {
+  text-align: left;
   color: #0096FF;
   font-size: 25px;
 }
