@@ -1,4 +1,5 @@
 # The-Maze
+![Game image](/Maze-pics/Maze.png?raw=true "Game image")
 Portfolio project, creating a 2D maze using Raytracing.
 
 ### Introduction
